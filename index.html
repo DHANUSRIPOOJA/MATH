@@ -1,261 +1,258 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fermat's Room Puzzle Game</title>
-  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Comfortaa', cursive;
-      background-color: #e6e0f8; /* soft lavender */
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      overflow-x: hidden;
-      color: #333;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fermat's Room Puzzle Game</title>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
+<style>
+body {
+  margin: 0;
+  font-family: 'Comfortaa', cursive;
+  overflow-x: hidden;
+  background: linear-gradient(-45deg, #e6e0f8, #f7f3ff, #e1d8f9, #f9f8ff);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
 
-    .game-container {
-      background-color: #faf7ff; /* very light lavender */
-      border-radius: 25px;
-      padding: 50px 40px;
-      max-width: 650px;
-      text-align: center;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
+@keyframes gradientBG {
+  0% {background-position:0% 50%;}
+  50% {background-position:100% 50%;}
+  100% {background-position:0% 50%;}
+}
 
-    .game-container:hover {
-      transform: scale(1.02);
-      box-shadow: 0 20px 50px rgba(0,0,0,0.15);
-    }
+.game-container {
+  background-color: #faf7ff;
+  border-radius: 25px;
+  padding: 40px 30px;
+  width: 650px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
 
-    h1 {
-      font-size: 2.8rem;
-      color: #9b59b6;
-      margin-bottom: 10px;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    }
+h1 {
+  font-size: 3rem;
+  color: #9b59b6;
+  margin-bottom: 10px;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+}
 
-    .description {
-      font-size: 1.2rem;
-      color: #7a5cae;
-      margin-bottom: 30px;
-      font-weight: 500;
-    }
+.description {
+  font-size: 1.2rem;
+  color: #7a5cae;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
 
-    .puzzle {
-      background: #f5f0ff; /* light lavender card */
-      border-radius: 20px;
-      padding: 25px;
-      font-size: 1.2rem;
-      line-height: 1.5;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-      margin-bottom: 25px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+.puzzle {
+  background: #f5f0ff;
+  border-radius: 20px;
+  padding: 25px;
+  font-size: 1.3rem;
+  line-height: 1.6;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  margin-bottom: 25px;
+  transition: all 0.3s ease;
+  min-height: 80px;
+}
 
-    .puzzle:hover {
-      transform: scale(1.03);
-      box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-      background: #e9e0ff;
-    }
+.puzzle.correct {
+  animation: glow 0.6s ease;
+}
 
-    .puzzle.correct {
-      background: #d8f4e5;
-      transform: scale(1.03);
-      box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-    }
+.puzzle.wrong {
+  animation: shake 0.6s ease;
+}
 
-    input {
-      width: 85%;
-      padding: 16px;
-      border-radius: 18px;
-      border: 2px solid #d6cdea;
-      outline: none;
-      font-size: 1.15rem;
-      text-align: center;
-      background: #fffafc;
-      transition: all 0.3s ease;
-    }
+@keyframes glow {
+  0% {box-shadow: 0 8px 25px rgba(0,0,0,0.08);}
+  50% {box-shadow: 0 0 25px #9b59b6;}
+  100% {box-shadow: 0 8px 25px rgba(0,0,0,0.08);}
+}
 
-    input:focus {
-      border-color: #9b59b6;
-      box-shadow: 0 0 12px rgba(155, 89, 182, 0.3);
-    }
+@keyframes shake {
+  0% {transform: translateX(0);}
+  25% {transform: translateX(-10px);}
+  50% {transform: translateX(10px);}
+  75% {transform: translateX(-10px);}
+  100% {transform: translateX(0);}
+}
 
-    button {
-      background: #c9b3f4; /* lavender */
-      border: none;
-      border-radius: 25px;
-      padding: 14px 35px;
-      font-size: 1.2rem;
-      font-weight: 600;
-      cursor: pointer;
-      color: #fff;
-      margin-top: 25px;
-      transition: all 0.3s ease;
-    }
+input {
+  width: 85%;
+  padding: 16px;
+  border-radius: 18px;
+  border: 2px solid #d6cdea;
+  outline: none;
+  font-size: 1.15rem;
+  text-align: center;
+  background: #fffafc;
+  transition: all 0.3s ease;
+}
 
-    button:hover {
-      background: #b296f0;
-      transform: scale(1.05) translateY(-2px);
-    }
+input:focus {
+  border-color: #9b59b6;
+  box-shadow: 0 0 12px rgba(155, 89, 182, 0.3);
+}
 
-    .result {
-      margin-top: 20px;
-      font-size: 1.3rem;
-      font-weight: bold;
-      min-height: 30px;
-    }
+button {
+  background: #c9b3f4;
+  border: none;
+  border-radius: 25px;
+  padding: 14px 35px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #fff;
+  margin-top: 25px;
+  transition: all 0.3s ease;
+}
 
-    .success { color: #27ae60; }
-    .error { color: #e74c3c; }
+button:hover {
+  background: #b296f0;
+  transform: scale(1.05) translateY(-2px);
+}
 
-    footer {
-      margin-top: 40px;
-      font-size: 1rem;
-      color: #555;
-      text-shadow: 0 1px 2px rgba(255,255,255,0.3);
-    }
+.result {
+  margin-top: 20px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  min-height: 30px;
+}
 
-    .confetti {
-      position: fixed;
-      width: 10px;
-      height: 10px;
-      opacity: 0.8;
-      pointer-events: none;
-      animation: fall 3s linear forwards;
-      border-radius: 50%;
-    }
+.success { color: #27ae60; }
+.error { color: #e74c3c; }
 
-    @keyframes fall {
-      0% { transform: translateY(-10px) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(360deg); }
-    }
+footer {
+  margin-top: 40px;
+  font-size: 1rem;
+  color: #555;
+  text-shadow: 0 1px 2px rgba(255,255,255,0.3);
+}
 
-    .code-display {
-      margin-top: 20px;
-      font-size: 2rem;
-      letter-spacing: 20px;
-      font-weight: bold;
-      color: #333;
-    }
+.confetti {
+  position: fixed;
+  width: 10px;
+  height: 10px;
+  opacity: 0.8;
+  pointer-events: none;
+  animation: fall 3s linear forwards;
+  border-radius: 50%;
+}
 
-    .escaped-text {
-      font-weight: bold;
-      font-size: 1.5rem;
-    }
+@keyframes fall {
+  0% { transform: translateY(-10px) rotate(0deg); }
+  100% { transform: translateY(100vh) rotate(360deg); }
+}
 
-  </style>
+.code-display {
+  margin-top: 20px;
+  font-size: 2rem;
+  letter-spacing: 20px;
+  font-weight: bold;
+  color: #333;
+}
+
+.escaped-text {
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #4b0082;
+}
+</style>
 </head>
 <body>
 
-  <div class="game-container">
-    <h1>Fermat's Room</h1>
-    <p class="description">Solve clever puzzles, collect codes, and unlock the room. Can you escape before time runs out?</p>
-    <div class="puzzle" id="puzzle-text">
-      Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).
-    </div>
-    <input type="text" id="answer" placeholder="Enter your answer">
-    <br>
-    <button onclick="checkAnswer()">Submit</button>
-    <p class="result" id="result"></p>
-    <div class="code-display" id="code-display">_ _ _ _</div>
+<div class="game-container">
+  <h1>Fermat's Room</h1>
+  <p class="description">Solve clever puzzles, collect codes, and unlock the room. Can you escape before time runs out?</p>
+  <div class="puzzle" id="puzzle-text">
+    Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).
   </div>
+  <input type="text" id="answer" placeholder="Enter your answer"><br>
+  <button onclick="checkAnswer()">Submit</button>
+  <p class="result" id="result"></p>
+  <div class="code-display" id="code-display">_ _ _ _</div>
+</div>
 
-  <footer>Created by Dhanu</footer>
+<footer>Created by Dhanu</footer>
 
-  <script>
-    const puzzles = [
-      {q: "Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).", a: "46"},
-      {q: "Puzzle 2: Two ropes burn in 60 min (unevenly). Using 2 ropes and matches, measure 45 minutes. (Type 'method')", a: "method"},
-      {q: "Puzzle 3: Number Sequence Puzzle: Find the next number: 2, 6, 12, 20, ?. Enter the last digit of the next number.", a: "0"},
-      {q: "Puzzle 4: People A,B,C,D,E in a row. B left of C, D left of A, A not ends, E right of B. Who is in middle? (Enter a letter)", a: "C"}
-    ];
+<script>
+const puzzles = [
+  {q: "Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).", a:"46"},
+  {q: "Puzzle 2: Two ropes burn in 60 min (unevenly). Using 2 ropes and matches, measure 45 minutes. (Type 'method')", a:"method"},
+  {q: "Puzzle 3: Number Sequence Puzzle: Find next number: 2,6,12,20,?. Enter last digit", a:"0"},
+  {q: "Puzzle 4: People A,B,C,D,E in a row. B left of C, D left of A, A not ends, E right of B. Who is in middle? (Enter a letter)", a:"C"}
+];
 
-    let code = ["4","7","3","2"]; 
-    const displayCodeMap = {"4":"0", "7":"8", "3":"3", "2":"7"}; 
-    let current = 0;
-    let enteredDigits = ["_","_","_","_"];
-    let escaped = false;
+let code = ["4","7","3","2"];
+const displayCodeMap = {"4":"0","7":"8","3":"3","2":"7"};
+let current = 0;
+let enteredDigits = ["_","_","_","_"];
+let escaped = false;
 
-    function confettiBurst() {
-      for(let i=0;i<50;i++){
-        const confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.backgroundColor = `hsl(${Math.random()*360},60%,70%)`; // lavender shades
-        confetti.style.left = `${Math.random()*100}vw`;
-        confetti.style.width = `${Math.random()*8 + 5}px`;
-        confetti.style.height = confetti.style.width;
-        confetti.style.animationDuration = `${Math.random()*2 + 2}s`;
-        document.body.appendChild(confetti);
-        setTimeout(()=>confetti.remove(),3000);
-      }
-    }
+function confettiBurst() {
+  for(let i=0;i<50;i++){
+    const confetti = document.createElement('div');
+    confetti.className='confetti';
+    confetti.style.backgroundColor = `hsl(${Math.random()*360},70%,60%)`;
+    confetti.style.left=`${Math.random()*100}vw`;
+    confetti.style.width=`${Math.random()*8+5}px`;
+    confetti.style.height=confetti.style.width;
+    confetti.style.animationDuration=`${Math.random()*2+2}s`;
+    document.body.appendChild(confetti);
+    setTimeout(()=>confetti.remove(),3000);
+  }
+}
 
-    function updateCodeDisplay() {
-      document.getElementById("code-display").textContent = enteredDigits.join(" ");
-    }
+function updateCodeDisplay() {
+  document.getElementById("code-display").textContent = enteredDigits.join(" ");
+}
 
-    function checkAnswer() {
-      const userAnswer = document.getElementById("answer").value.trim();
-      const result = document.getElementById("result");
-      const puzzleBox = document.getElementById("puzzle-text");
+function typewriterEffect(text, element){
+  element.textContent="";
+  let i=0;
+  const interval=setInterval(()=>{
+    if(i<text.length){element.textContent+=text[i];i++;}
+    else clearInterval(interval);
+  },25);
+}
 
-      if(userAnswer.toLowerCase() === puzzles[current].a.toLowerCase()) {
-        if(!escaped) confettiBurst(); // confetti only if still solving
-        result.textContent = "Correct!";
-        result.className = "result success";
-        puzzleBox.classList.add("correct");
+function checkAnswer(){
+  const userAnswer=document.getElementById("answer").value.trim();
+  const result=document.getElementById("result");
+  const puzzleBox=document.getElementById("puzzle-text");
 
-        enteredDigits[current] = displayCodeMap[code[current]];
-        updateCodeDisplay();
+  if(userAnswer.toLowerCase()===puzzles[current].a.toLowerCase()){
+    if(!escaped) confettiBurst();
+    puzzleBox.classList.remove("wrong");
+    puzzleBox.classList.add("correct");
+    result.textContent="Correct!";
+    result.className="result success";
 
-        current++;
-        setTimeout(()=>{
-          if(current < puzzles.length){
-            puzzleBox.textContent = puzzles[current].q;
-            document.getElementById("answer").value = "";
-            puzzleBox.classList.remove("correct");
-            result.textContent = "";
-          } else {
-            puzzleBox.textContent = "All puzzles solved! Enter final 4-digit code to unlock the door";
-            document.getElementById("answer").value = "";
-            document.querySelector("button").setAttribute("onclick","checkCode()");
-            puzzleBox.classList.remove("correct");
-            result.textContent = "";
-          }
-        },1000);
-      } else {
-        result.textContent = "Try again!";
-        result.className = "result error";
-      }
-    }
-
-    function checkCode() {
-      const userCode = document.getElementById("answer").value.trim();
-      const result = document.getElementById("result");
-      confettiBurst(); // confetti every click after escape
-
-      if(userCode === enteredDigits.join("") && !escaped) {
-        escaped = true;
-        result.innerHTML = "<span class='escaped-text'>Door opens! You escaped!</span>";
-        document.querySelector("button").disabled = false;
-      } else if(escaped) {
-        result.innerHTML = "<span class='escaped-text'>🎊 Confetti time! 🎊</span>";
-      } else {
-        result.textContent = "Wrong code!";
-        result.className = "result error";
-      }
-    }
-
+    enteredDigits[current]=displayCodeMap[code[current]];
     updateCodeDisplay();
-  </script>
-</body>
-</html>
+
+    current++;
+    setTimeout(()=>{
+      if(current<puzzles.length){
+        typewriterEffect(puzzles[current].q,puzzleBox);
+        document.getElementById("answer").value="";
+        puzzleBox.classList.remove("correct");
+        result.textContent="";
+      }else{
+        typewriterEffect("All puzzles solved! Enter final 4-digit code to unlock the door",puzzleBox);
+        document.getElementById("answer").value="";
+        document.querySelector("button").setAttribute("onclick","checkCode()");
+        puzzleBox.classList.remove("correct");
+        result.textContent="";
+      }
+    },600);
+  }else{
+    puzzleBox.classList.remove("correct");
+    puzzle
