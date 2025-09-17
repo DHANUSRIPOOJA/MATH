@@ -176,10 +176,11 @@
       {q: "Puzzle 4: People A,B,C,D,E in a row. B left of C, D left of A, A not ends, E right of B. Who is in middle? (Enter a letter)", a: "C"}
     ];
 
-    let code = ["4","7","3","2"]; // original puzzle digits
-    const displayCodeMap = {"4":"0", "7":"8", "3":"3", "2":"7"}; // final code 0837
+    let code = ["4","7","3","2"]; 
+    const displayCodeMap = {"4":"0", "7":"8", "3":"3", "2":"7"}; 
     let current = 0;
     let enteredDigits = ["_","_","_","_"];
+    let escaped = false;
 
     function confettiBurst() {
       for(let i=0;i<50;i++){
@@ -204,7 +205,9 @@
       const result = document.getElementById("result");
       const puzzleBox = document.getElementById("puzzle-text");
 
+      // Confetti only when puzzle correct and not escaped yet
       if(userAnswer.toLowerCase() === puzzles[current].a.toLowerCase()) {
+        confettiBurst();
         result.textContent = "Correct!";
         result.className = "result success";
         puzzleBox.classList.add("correct");
@@ -236,11 +239,17 @@
     function checkCode() {
       const userCode = document.getElementById("answer").value.trim();
       const result = document.getElementById("result");
-      if(userCode === enteredDigits.join("")) {
+      // After room escaped, confetti every submit
+      confettiBurst();
+
+      if(userCode === enteredDigits.join("") && !escaped) {
+        escaped = true;
         result.textContent = "Door opens! You escaped 🎉";
         result.className = "result success";
-        confettiBurst(); // confetti only on final submit
-        document.querySelector("button").disabled = true;
+        document.querySelector("button").disabled = false; // keep button active
+      } else if(escaped) {
+        result.textContent = "Enjoy the confetti! 🎊";
+        result.className = "result success";
       } else {
         result.textContent = "Wrong code!";
         result.className = "result error";
