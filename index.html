@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fermat's Room Puzzle Game</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f7f4f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: #444;
+    }
+    .game-container {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+      padding: 20px 30px;
+      max-width: 500px;
+      text-align: center;
+    }
+    h1 {
+      color: #7a6fa8;
+    }
+    .puzzle {
+      margin-top: 20px;
+      padding: 15px;
+      background: #f0ecf6;
+      border-radius: 15px;
+      font-size: 1rem;
+    }
+    input {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 2px solid #d6cdea;
+      border-radius: 10px;
+      font-size: 1rem;
+      text-align: center;
+      outline: none;
+      background: #faf9fc;
+    }
+    button {
+      background: #c6b7f0;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+      transition: background 0.3s ease;
+    }
+    button:hover {
+      background: #b2a1e3;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    .success {
+      color: #4CAF50;
+    }
+    .error {
+      color: #E57373;
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <h1>Fermat's Room</h1>
+    <p class="puzzle" id="puzzle-text">Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).</p>
+    <input type="text" id="answer" placeholder="Your answer">
+    <button onclick="checkAnswer()">Submit</button>
+    <p class="result" id="result"></p>
+  </div>
+
+  <script>
+    const puzzles = [
+      {
+        q: "Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).",
+        a: "46"
+      },
+      {
+        q: "Puzzle 2: Two ropes burn in 60 min (unevenly). Using 2 ropes and matches, measure 45 minutes. (Type 'method')",
+        a: "method"
+      },
+      {
+        q: "Puzzle 3: Choose three weights that let you measure 1..13 using both pans. Enter as numbers with commas (e.g. 1,3,9)",
+        a: "1,3,9"
+      },
+      {
+        q: "Puzzle 4: People A,B,C,D,E in a row. B left of C, D left of A, A not ends, E right of B. Who is in middle? (Enter a letter)",
+        a: "C"
+      }
+    ];
+
+    let current = 0;
+    let code = ["4","7","3","2"];
+    let enteredDigits = [];
+
+    function checkAnswer() {
+      const userAnswer = document.getElementById("answer").value.trim();
+      const result = document.getElementById("result");
+      if (userAnswer.toLowerCase() === puzzles[current].a.toLowerCase()) {
+        result.textContent = "Correct!";
+        result.className = "result success";
+        enteredDigits.push(code[current]);
+        current++;
+        if (current < puzzles.length) {
+          document.getElementById("puzzle-text").textContent = puzzles[current].q;
+          document.getElementById("answer").value = "";
+        } else {
+          document.getElementById("puzzle-text").textContent = "All puzzles solved! Enter final code (4 digits)";
+          document.getElementById("answer").value = "";
+          document.querySelector("button").setAttribute("onclick", "checkCode()");
+        }
+      } else {
+        result.textContent = "Try again!";
+        result.className = "result error";
+      }
+    }
+
+    function checkCode() {
+      const userCode = document.getElementById("answer").value.trim();
+      const result = document.getElementById("result");
+      if (userCode === enteredDigits.join("")) {
+        result.textContent = "Door opens! You escaped 🎉";
+        result.className = "result success";
+        document.querySelector("button").disabled = true;
+      } else {
+        result.textContent = "Wrong code!";
+        result.className = "result error";
+      }
+    }
+  </script>
+</body>
+</html>
