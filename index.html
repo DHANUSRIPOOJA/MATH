@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Fermat's Room Puzzle Game</title>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@400;700&display=swap" rel="stylesheet">
   <style>
@@ -31,7 +31,7 @@
     }
 
     .game-container:hover {
-      transform: scale(1.05);
+      transform: scale(1.03);
       box-shadow: 0 25px 60px rgba(0,0,0,0.25);
     }
 
@@ -57,20 +57,13 @@
       line-height: 1.6;
       box-shadow: 0 10px 30px rgba(0,0,0,0.1);
       margin-bottom: 30px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.5s ease, color 0.5s ease;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
       cursor: pointer;
-    }
-
-    .puzzle:hover {
-      transform: scale(1.05);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-      background: #d9f0ff;
-      color: #333;
     }
 
     .puzzle.correct {
       background: #d4f8e8;
-      transform: scale(1.05);
+      transform: scale(1.03);
       box-shadow: 0 15px 40px rgba(0,0,0,0.2);
     }
 
@@ -106,7 +99,7 @@
     }
 
     button:hover {
-      transform: scale(1.1) translateY(-3px);
+      transform: scale(1.08) translateY(-2px);
       box-shadow: 0 15px 35px rgba(0,0,0,0.3);
     }
 
@@ -120,6 +113,14 @@
     .success { color: #27ae60; }
     .error { color: #e74c3c; }
 
+    .code-display {
+      margin-top: 20px;
+      font-size: 2rem;
+      letter-spacing: 20px;
+      font-weight: bold;
+      color: #333;
+    }
+
     footer {
       margin-top: 40px;
       font-size: 1rem;
@@ -131,23 +132,16 @@
       position: fixed;
       width: 10px;
       height: 10px;
-      background-color: #f6d365;
-      opacity: 0.8;
+      opacity: 0.9;
       pointer-events: none;
       animation: fall 3s linear forwards;
+      border-radius: 2px;
     }
 
     @keyframes fall {
-      0% { transform: translateY(-10px) rotate(0deg); }
-      100% { transform: translateY(100vh) rotate(360deg); }
-    }
-
-    .code-display {
-      margin-top: 20px;
-      font-size: 2rem;
-      letter-spacing: 20px;
-      font-weight: bold;
-      color: #333;
+      0% { transform: translateY(-10px) rotate(0deg); opacity: 1; }
+      90% { opacity: 1; }
+      100% { transform: translateY(100vh) rotate(360deg); opacity: 0.9; }
     }
   </style>
 </head>
@@ -155,13 +149,13 @@
 
   <div class="game-container">
     <h1>Fermat's Room</h1>
-    <p class="description">Solve clever puzzles, collect codes, and unlock the room. Can you escape before time runs out?</p>
+    <p class="description">Solve clever puzzles, collect clues, and unlock the door!</p>
     <div class="puzzle" id="puzzle-text">
       Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).
     </div>
     <input type="text" id="answer" placeholder="Enter your answer">
     <br>
-    <button onclick="checkAnswer()">Submit</button>
+    <button id="submit-btn" onclick="checkAnswer()">Submit</button>
     <p class="result" id="result"></p>
     <div class="code-display" id="code-display">_ _ _ _</div>
   </div>
@@ -172,27 +166,28 @@
     const puzzles = [
       {q: "Puzzle 1: My two-digit code has digits whose sum is 10 and product is 24. Enter the two digits together (e.g., 46).", a: "46"},
       {q: "Puzzle 2: Two ropes burn in 60 min (unevenly). Using 2 ropes and matches, measure 45 minutes. (Type 'done')", a: "done"},
-      {q: "Puzzle 3: Number Sequence Puzzle: Find the next number: 2, 6, 12, 20, ?. Enter the last digit of the next number.", a: "0"},
+      {q: "Puzzle 3: Number Sequence: 2, 6, 12, 20, ? (Enter the last digit of the next number)", a: "0"},
       {q: "Puzzle 4: People A,B,C,D,E in a row. B left of C, D left of A, A not ends, E right of B. Who is in middle? (Enter a letter)", a: "C"}
     ];
 
-    let code = ["4","7","3","2"]; 
-    const displayCodeMap = {"4":"0", "7":"8", "3":"3", "2":"7"}; 
-    let current = 0;
+    // Real hidden final code (array for per-digit reveal during puzzles)
+    const code = ["0","8","3","7"];
     let enteredDigits = ["_","_","_","_"];
+    let current = 0;
     let escaped = false;
 
-    function confettiBurst() {
-      for(let i=0;i<50;i++){
+    function confettiBurst(count = 40) {
+      for (let i = 0; i < count; i++) {
         const confetti = document.createElement('div');
         confetti.className = 'confetti';
-        confetti.style.backgroundColor = `hsl(${Math.random()*360},70%,60%)`;
-        confetti.style.left = `${Math.random()*100}vw`;
-        confetti.style.width = `${Math.random()*8 + 5}px`;
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+        confetti.style.left = `${Math.random() * 100}vw`;
+        confetti.style.width = `${Math.random() * 8 + 5}px`;
         confetti.style.height = confetti.style.width;
-        confetti.style.animationDuration = `${Math.random()*2 + 2}s`;
+        confetti.style.animationDuration = `${Math.random() * 2 + 2}s`;
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
         document.body.appendChild(confetti);
-        setTimeout(()=>confetti.remove(),3000);
+        setTimeout(() => confetti.remove(), 3400);
       }
     }
 
@@ -205,32 +200,39 @@
       const result = document.getElementById("result");
       const puzzleBox = document.getElementById("puzzle-text");
 
-      // Confetti only when puzzle correct and not escaped yet
-      if(userAnswer.toLowerCase() === puzzles[current].a.toLowerCase()) {
+      // If we're already in final-code mode, ensure the button calls checkCode()
+      if (current >= puzzles.length) {
+        return checkCode();
+      }
+
+      if (userAnswer.toLowerCase() === puzzles[current].a.toLowerCase()) {
+        // correct: confetti only when correct
         confettiBurst();
         result.textContent = "Correct!";
         result.className = "result success";
-        puzzleBox.classList.add("correct");
 
-        enteredDigits[current] = displayCodeMap[code[current]];
+        // reveal that puzzle's digit in the on-screen code display
+        enteredDigits[current] = code[current];
         updateCodeDisplay();
 
         current++;
-        setTimeout(()=>{
-          if(current < puzzles.length){
+        setTimeout(() => {
+          if (current < puzzles.length) {
             puzzleBox.textContent = puzzles[current].q;
             document.getElementById("answer").value = "";
-            puzzleBox.classList.remove("correct");
             result.textContent = "";
           } else {
-            puzzleBox.textContent = "All puzzles solved! Enter final 4-digit code to unlock the door";
+            // All puzzles solved: switch to final code entry and hide visible code
+            puzzleBox.textContent = "All puzzles solved! Enter the 4-digit final code:";
             document.getElementById("answer").value = "";
-            document.querySelector("button").setAttribute("onclick","checkCode()");
-            puzzleBox.classList.remove("correct");
+            document.getElementById("submit-btn").setAttribute("onclick", "checkCode()");
             result.textContent = "";
+            // hide the code display when asking for final code (so players can't see it)
+            document.getElementById("code-display").style.display = "none";
           }
-        },1000);
+        }, 700);
       } else {
+        // wrong answer -> no confetti
         result.textContent = "Try again!";
         result.className = "result error";
       }
@@ -239,23 +241,30 @@
     function checkCode() {
       const userCode = document.getElementById("answer").value.trim();
       const result = document.getElementById("result");
-      // After room escaped, confetti every submit
-      confettiBurst();
 
-      if(userCode === enteredDigits.join("") && !escaped) {
+      // If door already opened: show confetti again on every click (per your request)
+      if (escaped) {
+        confettiBurst();
+        result.textContent = "🚪 Door Opens!🎉";
+        result.className = "result success";
+        return;
+      }
+
+      if (userCode === code.join("")) {
+        // correct final code -> open door and enable repeated confetti on clicks
         escaped = true;
-        result.textContent = "Door opens! You escaped 🎉";
+        confettiBurst();
+        result.textContent = "🚪 Door Opens!🎉";
         result.className = "result success";
-        document.querySelector("button").disabled = false; // keep button active
-      } else if(escaped) {
-        result.textContent = "Door opens! You escaped 🎊";
-        result.className = "result success";
+        // NOTE: we intentionally do NOT disable the button, so clicking submit repeatedly will keep showing confetti
       } else {
+        // wrong final code - no confetti
         result.textContent = "Wrong code!";
         result.className = "result error";
       }
     }
 
+    // initial display
     updateCodeDisplay();
   </script>
 </body>
